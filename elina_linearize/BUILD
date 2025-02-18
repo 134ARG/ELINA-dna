@@ -1,3 +1,8 @@
+config_setting(
+    name = "dbg",
+    values = {"compilation_mode": "dbg"},
+)
+
 cc_library(
     name = "elina-linearize",
     srcs = glob(
@@ -9,13 +14,16 @@ cc_library(
     hdrs = glob(
         ["*.h"],
     ),
-    copts = ["-march=native"],
+    copts = select({
+        ":dbg": ["-pg"],
+        "//conditions:default": [],
+    }) + ["-march=native"],
     includes = ["."],
     linkstatic = True,
     visibility = ["//visibility:public"],
     deps = [
         "//ELINA/elina_auxiliary:elina-auxiliary",
-        "@mpfr//:libmpfr",
         "@gmp//:libgmp",
+        "@mpfr//:libmpfr",
     ],
 )

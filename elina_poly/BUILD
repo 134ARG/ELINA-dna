@@ -1,3 +1,8 @@
+config_setting(
+    name = "dbg",
+    values = {"compilation_mode": "dbg"},
+)
+
 cc_library(
     name = "elina-poly",
     srcs = glob(
@@ -30,9 +35,11 @@ cc_library(
         "-Wstrict-prototypes",
         "-Wno-strict-overflow",
         "-std=c99",
-        "-O3",
         "-march=native",
-    ],
+    ] + select({
+        ":dbg": ["-pg"],
+        "//conditions:default": [],
+    }),
     includes = ["."],
     linkstatic = True,
     visibility = ["//visibility:public"],
